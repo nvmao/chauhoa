@@ -34,10 +34,7 @@
                 <div>
                     <img class="img-add" src="<%=stock.image %>" alt="">
                     <div style="margin:0">
-                        <form class="d-inline" action="/add/<%=stock._id%>/edit_stock">
-                            <button class="btn-sm"><i class="fas fa-edit"></i></button>
-                        </form>
-                        <form class="d-inline" action="/add/<%=stock._id%>?_method=DELETE" method="POST">
+                        <form class="d-inline" action="/sell/<%=stock._id%>?_method=DELETE" method="POST">
                             <button class="btn-sm"><i class="fas fa-trash-alt"></i></button>
                         </form>
                     </div>

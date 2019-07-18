@@ -476,6 +476,15 @@ app.post("/sell/:id/minus", function (req, res) {
     });
 });
 
+app.delete("/sell/:id",function(req,res){
+    TempBill.findByIdAndDelete(req.params.id,function(err){
+        if(err){
+            console.log(err);
+        }
+        res.redirect("/sell");
+    })
+});
+
 app.post("/sell", function (req, res) {
     if (TempBill.length < 1) {
         return res.redirect("/");
