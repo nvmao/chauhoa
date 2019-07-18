@@ -1,0 +1,171 @@
+<% include partials/header %>
+
+
+<div class="container">
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm stock_info">
+                <h3>Hình</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Tên</h3>
+            </div>
+            <div class="col-sm stock_info" stock_info>
+                <h3>Vật liệu</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Giá tiền</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Tồn kho</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Số lượng</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Tổng tiền</h3>
+            </div>
+        </div>
+        <hr>
+        <% stocks.forEach(function(stock){%>
+        <div class="row">
+            <div class="col-sm text-center">
+                <div>
+                    <img class="img-add" src="<%=stock.image %>" alt="">
+                    <div style="margin:0">
+                        <form class="d-inline" action="/add/<%=stock._id%>/edit_stock">
+                            <button class="btn-sm"><i class="fas fa-edit"></i></button>
+                        </form>
+                        <form class="d-inline" action="/add/<%=stock._id%>?_method=DELETE" method="POST">
+                            <button class="btn-sm"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm stock_info">
+                <%=stock.name %>
+            </div>
+            <div class="col-sm stock_info stock_info">
+                <%=stock.material %>
+            </div>
+            <div class="col-sm stock_info">
+                <p><%=stock.sell_price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+            </div>
+            <div class="col-sm stock_info">
+                <%=stock.totals %>
+            </div>
+            <div class="col-sm stock_info">
+                <div class="input-group bootstrap-touchspin">
+                    <form action="/sell/<%=stock._id%>/minus" method="POST">
+                        <span class="input-group-btn"><button
+                                class="btn btn-light bootstrap-touchspin-down">-</button></span>
+                    </form>
+                    <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span><input
+                        value="<%=stock.sell_totals%>" id="qty" disabled="disabled" type="number" name="qty" value="1"
+                        min="1" max="100" class="form-control" style="display: block;"><span
+                        class="input-group-addon bootstrap-touchspin-postfix" style="display: none;"></span>
+                    <form action="/sell/<%=stock._id%>/plus" method="POST">
+                        <span class="input-group-btn"><button class="btn btn-light bootstrap-touchspin-up">+</button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm stock_info">
+                <p><%=(stock.sell_totals * stock.sell_price).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000
+                    đ</p>
+                <%totals_money_x += stock.sell_totals * stock.sell_price%>
+            </div>
+        </div>
+        <hr>
+        <%})%>
+        <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+                <div class="col-sm" style="margin-left:100px">
+                        <p>Tạm tính:</p>
+                </div>
+                <div class="col-sm  stock_info">
+                    <p><%=(totals_money_x ).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm stock_info">
+                <p>Giảm giá:</p>
+            </div>
+            <div class="col-sm  stock_info">
+                    <form class="sale-form input-group" action="/sell/sale" method="POST">
+                        <input class="sale-input form-control" type="text"  placeholder="giảm giá"
+                           name="sale" value="<%=sale%>" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                           <div class=" input-group-append">
+                                <span class="input-group-text" id="basic-addon2">.000 đ</span>
+                            </div>
+                    </form>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                    
+            </div>
+            <div class="col-sm" style="margin-left:100px">
+                    <p>Thành tiền:</p>
+            </div>
+            <div class="col-sm  stock_info">
+                <p><%=(totals_money_x - sale).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+            </div>
+        </div>
+
+        <hr>
+        <div class="text-right">
+            <form class="d-inline" action="/" method="GET">
+                <button class="btn btn-primary">Thêm</button>
+            </form>
+            <form class="d-inline" action="/sell" method="POST">
+                <button class="btn btn-danger">Lưu</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var textInput = document.querySelector('.sale-input');
+    var timeout = null;
+    textInput.onkeyup = function (e) {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            document.querySelector('.sale-form').submit();
+        }, 2000);
+    };
+</script>
+
+
+<% include partials/footer %>

@@ -1,0 +1,176 @@
+<% include partials/header %>
+
+
+<div class="toast " style="position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+        <strong class="mr-auto">Thông báo</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Đã thêm vào giỏ hàng
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <form class="input-group search-bar" action="/search" method="POST">
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm">
+        <div class="input-group-append">
+            <button class="btn btn-secondary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <div style="margin-left:650px;margin-top: 10px;">
+        <button type="button" class="btn btn-sm btn-secondary" style="margin-left:100%;" data-toggle="collapse"
+            data-target="#filter-panel">
+            <i class="fas fa-filter"></i>
+        </button>
+        <div id="filter-panel" class="collapse filter-panel">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-inline" role="form" action="/search/filter/<%=page%>" method="POST">
+                        <div class="form-group">
+                            <label class="filter-col" style="margin-right:0;" for="pref-orderby">Sắp xếp:</label>
+                            <select id="pref-orderby" class="form-control" name="filter[order]">
+                                <option>Tăng dần</option>
+                                <option>Giảm dần</option>
+                            </select>
+                        </div> <!-- form group [order by] -->
+                        <div class="form-group">
+                            <label class="filter-col" style="margin-right:0;" for="pref-orderby">Loại:</label>
+                            <select id="pref-orderby" class="form-control" name="filter[kind]">
+                                <option>Tên</option>
+                                <option>Ngày nhập</option>
+                                <option>Giá bán</option>
+                                <option>Số lượng</option>
+                            </select>
+                        </div> <!-- form group [order by] -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success filter-col">
+                                <span class="glyphicon glyphicon-record"></span> Lọc
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row content">
+        <% stocks.forEach(function(stock){ %>
+        <div class="col-lg-3 col-sm" style="margin:0">
+            <div class="card" style="width: 18rem;height:99%;margin: 0 20px;object-fit: cover;">
+                <a href="/index/<%=stock._id%>">
+                    <img class="card-img-top img-index" src="<%=stock.image%>" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title"><%=stock.name%></h5>
+                        <p class="card-text"><%=stock.material%></p>
+                        <p class="card-text">còn lại: <%=stock.totals%></p>
+                        <% var day = dateformat(stock.created_at,"dd-mm-yyyy HH:MM");%>
+                        <p class="card-text">Ngày nhập: <%=day%></p>
+                        <p class="card-text badge badge-info badge-pill">
+                            <strong><%=stock.sell_price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000
+                                đ</strong></p>
+                        <form action="/sell/add/<%=stock._id%>" method="POST" class="card-text float-center">
+                            <button class="show-toast btn btn-primary">Thêm vào giỏ</button>
+                        </form>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <% });%>
+    </div>
+
+
+    <%var path = "";%>
+    <%var method = "GET";%>
+    <%if(search_type == 0){%>
+    <%        path = "/index/page/";%>
+    <%    }else if(search_type == 1){%>
+    <%        path = "/search/page/";%>
+    <%    }else{%>
+    <%        path = "/search/filter/"%>
+    <%         method="POST"%>
+    <%    }%>
+
+    <nav aria-label="Page navigation example" style="margin: 60px auto">
+        <ul class="pagination justify-content-center">
+            <%if(page-1 < 0){%>
+            <li class="page-item disabled">
+                <%}else{%>
+            <li class="page-item">
+                <%}%>
+                <form action="<%=path+(page-1)%>" method="<%=method%>">
+                    <%if(search_type==2){%>
+                        <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                        <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                    <%}%>
+                        <button class="page-link" href="<%=path+(page-1)%>" tabindex="-1">Previous</button>
+                </form>
+            </li>
+            <%if(page-1 >= 0){%>
+            <form action="<%=path+(page-1)%>" method="<%=method%>">
+                <%if(search_type==2){%>
+                    <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                    <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                <%}%>
+                <button class="page-item page-link"><%=page-1%></button>
+            </form>
+            <%}%>
+            <form action="<%=path+page%>" method="<%=method%>">
+                <%if(search_type==2){%>
+                    <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                    <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                <%}%>
+                <button class="page-item page-link active" style="background:gray;"><%=page%> </button>
+            </form>
+            <form action="<%=path+(page+1)%>" method="<%=method%>">
+                <%if(search_type==2){%>
+                    <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                    <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                <%}%>
+                <button class="page-item page-link"><%=page+1%> </button>
+            </form>
+            <form action="<%=path+(page+2)%>" method="<%=method%>">
+                <%if(search_type==2){%>
+                    <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                    <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                <%}%>
+                <button class="page-item page-link"><%=page+2%></button>
+            </form>
+            <form action="<%=path+(page+1)%>" method="<%=method%>">
+                <%if(search_type==2){%>
+                    <input type="text" name="filter[order]" value="<%=filter.order%>" style="display: none;">
+                    <input type="text" name="filter[kind]" value="<%=filter.kind%>" style="display: none;">
+                <%}%>
+                <button class="page-item page-link">
+                   Next
+                </button>
+            </form>
+
+        </ul>
+    </nav>
+
+</div>
+
+
+
+<% include partials/footer %>
+
+<script>
+    $(".show-toast").click(function () {
+        $(".toast").toast({
+            delay: 3000
+        });
+        $(".toast").toast('show');
+    });
+</script>

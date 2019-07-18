@@ -1,0 +1,63 @@
+<% include partials/header %>
+
+<div class="container">
+    <div class="input_form">
+        <form action="/add/add_stock" method="POST">
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Tên:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="stock[name]" class="form-control" id="name" placeholder="Tên" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="totals" class="col-sm-2 col-form-label">Số lượng:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="stock[totals]" class="form-control" id="totals" placeholder="Số lượng" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="material" class="col-sm-2 col-form-label">Vật liệu:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="stock[material]" class="form-control" id="material" placeholder="Vật liệu" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="import_price" class="col-sm-2 col-form-label">Giá nhập:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="stock[import_price]" class="form-control" id="import_price" placeholder="Giá nhập" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="sell_price" class="col-sm-2 col-form-label">Giá bán:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="stock[sell_price]" class="form-control" id="sell_price" placeholder="Giá bán" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="image" class="col-sm-2 col-form-label">Image:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="stock[image]" class="form-control" id="image" placeholder="Image">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Chú thích:</label>
+                <div class="col-sm-10">
+                    <textarea name="stock[description]" id="description" cols="61" rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group text-center">
+                <button class="btn btn-primary btn-lg text-center"> Thêm </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<% include partials/footer %>

@@ -1,0 +1,112 @@
+<% include partials/header %>
+
+
+<div class="container">
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm stock_info">
+                <h3>Hình</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Tên</h3>
+            </div>
+            <div class="col-sm stock_info" stock_info>
+                <h3>Vật liệu</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Giá nhập</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Giá xuất</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Số lượng</h3>
+            </div>
+            <div class="col-sm stock_info">
+                <h3>Tổng tiền nhập</h3>
+            </div>
+            <div class="col-sm stock_info">
+                    <h3>Tổng tiền xuất</h3>
+            </div>
+        </div>
+        <hr>
+        <% tempStockIn.forEach(function(stock){%>
+        <div class="row">
+            <div class="col-sm text-center">
+                <div>
+                    <img class="img-add" src="<%=stock.image %>" alt="">
+                    <div style="margin:0">
+                        <form class="d-inline" action="/add/<%=stock._id%>/edit_stock">
+                            <button class="btn-sm"><i class="fas fa-edit"></i></button>
+                        </form>
+                        <form class="d-inline" action="/add/<%=stock._id%>?_method=DELETE" method="POST">
+                            <button class="btn-sm"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm stock_info">
+                <%=stock.name %>
+            </div>
+            <div class="col-sm stock_info stock_info">
+                <%=stock.material %>
+            </div>
+            <div class="col-sm stock_info">
+                    <p><%=stock.import_price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+            </div>
+            <div class="col-sm stock_info">
+                <p><%=stock.sell_price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+            </div>
+            <div class="col-sm stock_info">
+                <%=stock.totals %>
+            </div>
+            <div class="col-sm stock_info">
+                <p><%=(stock.totals * stock.import_price).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+                <%totals_money_n += stock.totals * stock.import_price%>
+            </div>
+            <div class="col-sm stock_info">
+                    <p><%=(stock.totals * stock.sell_price).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+                    <%totals_money_x += stock.totals * stock.sell_price%>
+                </div>
+        </div>
+        <hr>
+        <%})%>
+        <hr>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm  stock_info">
+                <p><%=totals_money_n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+            </div>
+            <div class="col-sm  stock_info">
+                    <p><%=totals_money_x.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+                </div>
+        </div>
+
+        <hr>
+        <div class="text-right">
+            <form class="d-inline" action="/add/add_stock" method="GET">
+                <button class="btn btn-primary">Thêm</button>
+            </form>
+            <form class="d-inline" action="/add" method="POST">
+                <button class="btn btn-danger">Xong</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<% include partials/footer %>

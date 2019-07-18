@@ -1,0 +1,35 @@
+<% include partials/header %>
+
+<div class="container">
+    <div class="input_form" style="margin:100px auto;">
+        <form action="/statistic/show" method="POST">
+            <div class="form-group row">
+                <label for="date_from" class="col-sm-3 col-form-label">Từ ngày:</label>
+                <div class="col-sm">
+                    <input type="date" name="date[from]" class="form-control" id="date_from" required >
+                </div>
+            </div>
+
+            <div class="form-group row">
+                    <label for="date_to" class="col-sm-3 col-form-label">Đến ngày:</label>
+                    <div class="col-sm">
+                        <input type="date" name="date[to]" class="form-control" id="date_to" required>
+                    </div>
+                </div>
+
+            <div class="form-group text-center">
+                <button class="btn btn-primary btn-lg text-center"> Xem </button>
+            </div>
+        </form>
+
+        <form action="/statistic/show_all" method="GET" style="margin-top:100px;">
+            <div class="form-group text-center">
+                <button class="btn btn-primary btn-lg text-center"> Xem tất cả </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<% include partials/footer %>

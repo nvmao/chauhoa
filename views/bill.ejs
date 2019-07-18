@@ -1,0 +1,42 @@
+<% include partials/header %>
+
+<div class="container">
+    <div class="list-group content" style="margin: 30px auto;width: 70%;">
+        <% bills.forEach(function(bill){%>
+            <a href="/bill/<%=bill._id%>" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <% var day = dateformat(bill.created_at,"dd-mm-yyyy   -   HH:MM");%>
+                        <h5 class="mb-1"><%= day %></h5>
+                    </div>
+                    <p class="mb-1">
+                        <p>Tổng tiền: <%=(bill.totals_money - bill.sale).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")%>.000 đ</p>
+                    </p>
+                    <small>Hóa đơn </small>
+                </a>
+        <%})%>
+        
+    </div>
+
+    <nav aria-label="Page navigation example" style="margin: 30px auto">
+            <ul class="pagination justify-content-center">
+                <%if(page-1 < 0){%>
+                <li class="page-item disabled">
+                    <%}else{%>
+                <li class="page-item">
+                    <%}%>
+                        <a class="page-link" href="<%=page-1%>" tabindex="-1">Previous</a>
+                </li>
+                <%if(page-1 >= 0){%>
+                <li class="page-item"><a class="page-link" href="/bill/page/<%=page-1%>"><%=page-1%></a></li>
+                <%}%>
+                      <li class="page-item active"><a class="page-link" href="/search/page/<%=page%>"><%=page%></a></li>
+                <li class="page-item"><a class="page-link" href="/bill/page/<%=page+1%>"><%=page+1%></a></li>
+                <li class="page-item"><a class="page-link" href="/bill/page/<%=page+2%>"><%=page+2%></a></li>
+                <li class="page-item">
+                    <a class="page-link" href="/bill/page/<%=page+1%>">Next</a>
+                </li>
+            </ul>
+        </nav>
+</div>
+
+<% include partials/footer %>
