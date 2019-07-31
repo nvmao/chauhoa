@@ -1,4 +1,19 @@
 
+body{
+   background:#e9ebee
+}
+
+.m-naritem{
+    color: #dfe3e8
+}
+.m-naritem:hover{
+    color:whitesmoke;
+}
+
+.m-narbar{
+    background-color:#0f2842
+}
+
 .input_form{
     width: 50%;
     margin: 25px auto;
