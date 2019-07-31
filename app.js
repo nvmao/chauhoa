@@ -488,8 +488,9 @@ app.delete("/sell/:id",function(req,res){
     })
 });
 
-app.post("/sell", function (req, res) {
-    if (TempBill.length < 1) {
+app.post("/sell", async function (req, res) {
+    const count = await TempBill.countDocuments({})
+    if (count < 1) {
         return res.redirect("/sell");
     }
     TempBill.find({}, function (err, tempBill) {
