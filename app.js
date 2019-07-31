@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(methodOverride("_method"));
 
 var search = "";
+var searchBy;
 
 app.get("/", function (req, res) {
     res.redirect("/index");
@@ -68,7 +69,7 @@ app.get("/index/page/:page", function (req, res) {
                     stocks: stocks,
                     dateformat: dateformat,
                     page: page,
-                    search_type:0
+                    search_type: 0
                 });
             }
         })
@@ -167,10 +168,39 @@ app.post("/add", function (req, res) {
         }
     });
 });
--
+
 app.post("/search", function (req, res) {
-    var s = req.body.search;
-    search = s;
+    const s = req.body.search;
+    search = s
+    const by = req.body.searchBy
+
+    if (by === "Tên") {
+        searchBy = {
+            name: {$regex: `.*${String(search).toLowerCase()}.*`}
+        }
+    }
+    else if(by === "Giá bán"){
+        searchBy = {
+            sell_price: Number(search)
+        }
+    }
+    else if(by === "Vật liệu"){
+        searchBy = {
+            material: {$regex: `.*${String(search).toLowerCase()}.*`}
+        }
+    }
+    else if(by === "Vật liệu + Giá bán"){
+        var index = search.indexOf(' ')
+        var material = search.substr(0,index)
+        var price = Number(search.substr(index,search.length-1))
+        console.log(material)
+        console.log(price)
+
+        searchBy = {
+            sell_price: Number(price),
+            material: {$regex: `.*${String(material).toLowerCase()}.*`}
+        }
+    }
 
     return res.redirect('/search/page/0')
 
@@ -192,7 +222,7 @@ app.post("/search", function (req, res) {
                 stocks: stocks,
                 dateformat: dateformat,
                 page: page,
-                search_type:1
+                search_type: 1
             });
         }
     });
@@ -203,11 +233,8 @@ app.get("/search/page/:page", function (req, res) {
     var perPage = 12;
     var page = Math.max(0, req.params.page);
 
-    Stock.find({
-        name: {
-            $regex: '.*' + String(search).toLowerCase() + '.*'
-        }
-    }).skip(page * perPage).limit(perPage).
+    Stock.find(
+        searchBy).skip(page * perPage).limit(perPage).
     exec(function (err, stocks) {
         if (err) {
             console.log(err);
@@ -218,7 +245,7 @@ app.get("/search/page/:page", function (req, res) {
                 stocks: stocks,
                 dateformat: dateformat,
                 page: page,
-                search_type:1
+                search_type: 1
             });
         }
     });
@@ -253,93 +280,93 @@ app.post("/search/filter/:page", function (req, res) {
                     res.render("index", {
                         stocks: stocks,
                         dateformat: dateformat,
-                        page:page,
-                        search_type:2,
-                        filter:{
-                            order:req.body.filter.order,
-                            kind:req.body.filter.kind
-                        }             
+                        page: page,
+                        search_type: 2,
+                        filter: {
+                            order: req.body.filter.order,
+                            kind: req.body.filter.kind
+                        }
                     });
                 }
             });
     } else if (req.body.filter.kind == "Ngày nhập") {
         Stock.find({
-            name: {
-                $regex: '.*' + String(search).toLowerCase() + '.*'
-            }
-        }).sort({
-            created_at: order
-        }).limit(perPage).skip(perPage * page)
-        .exec(function (err, stocks) {
-            if (err) {
-                console.log(err);
-                res.redirect("/index");
-            } else {
-                console.log(stocks);
-                res.render("index", {
-                    stocks: stocks,
-                    dateformat: dateformat,
-                    page:page,
-                    search_type:2,
-                    filter:{
-                        order:req.body.filter.order,
-                        kind:req.body.filter.kind
-                    }                            
-                });
-            }
-        });
+                name: {
+                    $regex: '.*' + String(search).toLowerCase() + '.*'
+                }
+            }).sort({
+                created_at: order
+            }).limit(perPage).skip(perPage * page)
+            .exec(function (err, stocks) {
+                if (err) {
+                    console.log(err);
+                    res.redirect("/index");
+                } else {
+                    console.log(stocks);
+                    res.render("index", {
+                        stocks: stocks,
+                        dateformat: dateformat,
+                        page: page,
+                        search_type: 2,
+                        filter: {
+                            order: req.body.filter.order,
+                            kind: req.body.filter.kind
+                        }
+                    });
+                }
+            });
     } else if (req.body.filter.kind == "Số lượng") {
         Stock.find({
-            name: {
-                $regex: '.*' + String(search).toLowerCase() + '.*'
-            }
-        }).sort({
-            totals: order
-        }).limit(perPage).skip(perPage * page)
-        .exec(function (err, stocks) {
-            if (err) {
-                console.log(err);
-                res.redirect("/index");
-            } else {
-                console.log(stocks);
-                res.render("index", {
-                    stocks: stocks,
-                    dateformat: dateformat,
-                    page:page,
-                    search_type:2,
-                    filter:{
-                        order:req.body.filter.order,
-                        kind:req.body.filter.kind
-                    }                            
-                });
-            }
-        });
+                name: {
+                    $regex: '.*' + String(search).toLowerCase() + '.*'
+                }
+            }).sort({
+                totals: order
+            }).limit(perPage).skip(perPage * page)
+            .exec(function (err, stocks) {
+                if (err) {
+                    console.log(err);
+                    res.redirect("/index");
+                } else {
+                    console.log(stocks);
+                    res.render("index", {
+                        stocks: stocks,
+                        dateformat: dateformat,
+                        page: page,
+                        search_type: 2,
+                        filter: {
+                            order: req.body.filter.order,
+                            kind: req.body.filter.kind
+                        }
+                    });
+                }
+            });
     } else if (req.body.filter.kind == "Giá bán") {
         Stock.find({
-            name: {
-                $regex: '.*' + String(search).toLowerCase() + '.*'
-            }
-        }).sort({
-            sell_price: order
-        }).limit(perPage).skip(perPage * page)
-        .exec(function (err, stocks) {
-            if (err) {
-                console.log(err);
-                res.redirect("/index");
-            } else {
-                console.log(stocks);
-                res.render("index", {
-                    stocks: stocks,
-                    dateformat: dateformat,
-                    page:page,
-                    search_type:2,
-                    filter:{
-                        order:req.body.filter.order,
-                        kind:req.body.filter.kind
-                    }                                   
-                });
-            }
-        });
+                name: {
+                    $regex: '.*' + String(search).toLowerCase() + '.*'
+                }
+            }).sort({
+                sell_price: order
+            }).limit(perPage).skip(perPage * page)
+            .exec(function (err, stocks) {
+                if (err) {
+                    console.log(err);
+                    res.redirect("/index");
+                } else {
+                    console.log(stocks);
+                    res.render("index", {
+                        stocks: stocks,
+                        dateformat: dateformat,
+                        page: page,
+                        search_type: 2,
+                        filter: {
+                            order: req.body.filter.order,
+                            kind: req.body.filter.kind
+                        }
+                    });
+                }
+            });
     }
 });
 
@@ -479,9 +506,9 @@ app.post("/sell/:id/minus", function (req, res) {
     });
 });
 
-app.delete("/sell/:id",function(req,res){
-    TempBill.findByIdAndDelete(req.params.id,function(err){
-        if(err){
+app.delete("/sell/:id", function (req, res) {
+    TempBill.findByIdAndDelete(req.params.id, function (err) {
+        if (err) {
             console.log(err);
         }
         res.redirect("/sell");

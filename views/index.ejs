@@ -18,8 +18,16 @@
 
 <div class="container">
 
-    <form class="input-group search-bar" action="/search" method="POST">
+    <form class="input-group search-bar" action="/search" method="POST" >
         <input type="text" name="search" class="form-control" placeholder="Tìm kiếm">
+        <div class="input-group-append">
+            <select id="pref-orderby" class="form-control" name="searchBy">
+                <option>Tên</option>
+                <option>Giá bán</option>
+                <option>Vật liệu</option>
+                <option>Vật liệu + Giá bán</option>
+            </select>
+        </div> <!-- form group [order by] -->
         <div class="input-group-append">
             <button class="btn btn-secondary">
                 <i class="fa fa-search"></i>
