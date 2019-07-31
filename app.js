@@ -167,10 +167,13 @@ app.post("/add", function (req, res) {
         }
     });
 });
-
+-
 app.post("/search", function (req, res) {
     var s = req.body.search;
     search = s;
+
+    return res.redirect('/search/page/0')
+
     var perPage = 12;
     var page = Math.max(0, 0);
 
@@ -487,7 +490,7 @@ app.delete("/sell/:id",function(req,res){
 
 app.post("/sell", function (req, res) {
     if (TempBill.length < 1) {
-        return res.redirect("/");
+        return res.redirect("/sell");
     }
     TempBill.find({}, function (err, tempBill) {
         if (err) {
@@ -518,7 +521,7 @@ app.post("/sell", function (req, res) {
                             console.log(err);
                         }
                         sale = 0;
-                        res.redirect("/");
+                        res.redirect("/sell");
                     });
                 }
             });
